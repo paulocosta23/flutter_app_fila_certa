@@ -35,7 +35,7 @@ class _CadastroViewState extends State<CadastroView> {
   }
 
   String? _notEmpty(String? value) {
-    if ((value ?? '').trim().isEmpty) return 'Campo obrigatório';
+    if ((value ?? '').trim().isEmpty) return 'Campo obrigatório tela app';
     return null;
   }
 
