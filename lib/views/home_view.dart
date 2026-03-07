@@ -63,8 +63,8 @@ class _HomeViewState extends State<HomeView> {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Color.fromARGB(0, 6, 98, 184),
-              Color.fromARGB(0, 30, 112, 218),
+              Colors.white10,
+              Colors.lightBlue,
             ],
           ),
         ),
@@ -169,6 +169,7 @@ class _HomeViewState extends State<HomeView> {
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
+                          color: Colors.black
                         ),
                       ),
                     ),
@@ -182,7 +183,7 @@ class _HomeViewState extends State<HomeView> {
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor:
-                              const Color.fromARGB(255, 193, 212, 238),
+                              const Color.fromARGB(255, 69, 146, 255),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -194,7 +195,7 @@ class _HomeViewState extends State<HomeView> {
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            color: Colors.black87,
+                            color: Colors.white,
                           ),
                         ),
                       ),
@@ -210,7 +211,7 @@ class _HomeViewState extends State<HomeView> {
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor:
-                              const Color.fromARGB(255, 193, 212, 238),
+                              const Color.fromARGB(255, 69, 146, 255),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -227,7 +228,7 @@ class _HomeViewState extends State<HomeView> {
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            color: Colors.black87,
+                            color: Colors.white,
                           ),
                         ),
                       ),
@@ -243,11 +244,13 @@ class _HomeViewState extends State<HomeView> {
                       style: TextButton.styleFrom(
                         foregroundColor: const Color(0xFF1F6DD4),
                       ),
-                      child: const Text(
+                      child:
+                      const Text(
                         'Não tem conta? Cadastre-se',
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
+                          color: Colors.black
                         ),
                       ),
                     ),

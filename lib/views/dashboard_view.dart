@@ -201,8 +201,12 @@ class HomeTab extends StatelessWidget {
     required this.onOpenSettings,
   });
 
+  static const _bgUrl =
+      'https://admin.cnnbrasil.com.br/wp-content/uploads/sites/12/2024/02/google-maps-e1707316052388.png?w=1200&h=900&crop=0';
+
   @override
   Widget build(BuildContext context) {
+    final media = MediaQuery.of(context);
     final cs = Theme.of(context).colorScheme;
 
     return Scaffold(
@@ -214,25 +218,81 @@ class HomeTab extends StatelessWidget {
         ),
         title: const Text("FILA CERTA"),
       ),
-      body: Column(
+      body: Stack(
+        fit: StackFit.expand,
         children: [
-          // Campo de pesquisa
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: "Pesquisar...",
-                prefixIcon: const Icon(Icons.search),
-                // filled/cores já são controladas pelo Theme
-              ),
+          // ===== Imagem de fundo =====
+          Positioned.fill(
+            child: Image.network(
+              _bgUrl,
+              fit: BoxFit.cover,
+              // Placeholder de carregamento
+              loadingBuilder: (context, child, progress) {
+                if (progress == null) return child;
+                return Container(
+                  color: cs.surfaceVariant.withOpacity(0.4),
+                  child: const Center(child: CircularProgressIndicator()),
+                );
+              },
+              // Fallback em caso de erro
+              errorBuilder: (context, error, stack) {
+                return Container(
+                  color: cs.surfaceVariant.withOpacity(0.4),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.broken_image, size: 48),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Não foi possível carregar a imagem de fundo',
+                        style: TextStyle(color: Theme.of(context).hintColor),
+                      ),
+                    ],
+                  ),
+                );
+              },
             ),
           ),
-          const SizedBox(height: 20),
-          Center(
-            child: Text(
-              'Bem-vindo ao Fila Certa 👋 ',
-              style: TextStyle(fontSize: 22, color: cs.onSurface),
+
+          // ===== Overlay sutil para legibilidade (se quiser mais contraste, aumente a opacidade) =====
+          Positioned.fill(
+            child: Container(
+              color: cs.surface.withOpacity(0.25),
             ),
+          ),
+
+          // ===== Conteúdo =====
+          ListView(
+            padding: const EdgeInsets.all(16),
+            children: [
+              // Campo de pesquisa
+              TextField(
+                decoration: InputDecoration(
+                  hintText: "Pesquisar...",
+                  prefixIcon: const Icon(Icons.search),
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              // Mensagem de boas-vindas
+              Text(
+                'Bem-vindo ao Fila Certa 👋',
+                style: TextStyle(
+                  fontSize: 22,
+                  color: cs.onSurface,
+                  fontWeight: FontWeight.w600,
+                  shadows: const [
+                    Shadow(
+                      color: Colors.black26,
+                      blurRadius: 2,
+                      offset: Offset(0, 1),
+                    ),
+                  ],
+                ),
+              ),
+
+            
+            ],
           ),
         ],
       ),
