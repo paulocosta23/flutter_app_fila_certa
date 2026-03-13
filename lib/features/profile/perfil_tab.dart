@@ -52,7 +52,11 @@ class _PerfilTabState extends State<PerfilTab> {
     final settings = SettingsScope.of(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Perfil")),
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF03557A), // muda a cor superior
+        foregroundColor: Colors.white, // muda a cor do título ou ícones
+        title: const Text("Perfil")
+        ),
       body: MediaQuery(
         data: MediaQuery.of(context).copyWith(textScaleFactor: settings.textScale),
         child: SingleChildScrollView(
@@ -67,7 +71,7 @@ class _PerfilTabState extends State<PerfilTab> {
                     backgroundColor: cs.surfaceVariant,
                     backgroundImage: _image != null ? FileImage(_image!) : null,
                     child: _image == null
-                        ? Icon(Icons.person, size: 60, color: cs.outline)
+                        ? Icon(Icons.person, size: 60, color: Color(0xFF03557A))
                         : null,
                   ),
                   TextButton(onPressed: _pickImage, child: const Text("Alterar foto")),
@@ -79,19 +83,33 @@ class _PerfilTabState extends State<PerfilTab> {
               _InfoCard(icon: Icons.email, title: _email, subtitle: "Email"),
               const SizedBox(height: 8),
               _InfoCard(icon: Icons.phone, title: _phone, subtitle: "Telefone"),
-              const SizedBox(height: 20),
+              const SizedBox(height: 35),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: SizedBox(
                   width: double.infinity,
                   child: ElevatedButton.icon(
                     onPressed: _goToEditProfile,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF03557A), // ajuste de cor do botão editar
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
                     icon: const Icon(Icons.edit),
-                    label: const Text("Editar Perfil"),
+                    label: const Text(
+                      "Editar Perfil",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      )
+                    ),
                   ),
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 18),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: SizedBox(
@@ -135,7 +153,7 @@ class _InfoCard extends StatelessWidget {
       elevation: 4,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
-        side: const BorderSide(color: Colors.blue, width: 1.5),
+        side: const BorderSide(color: Color(0xFF03557A), width: 1.5),
       ),
       child: ListTile(
         leading: Icon(icon),

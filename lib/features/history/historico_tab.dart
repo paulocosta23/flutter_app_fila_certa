@@ -18,7 +18,11 @@ class HistoricoTab extends StatelessWidget {
     return MediaQuery(
       data: MediaQuery.of(context).copyWith(textScaleFactor: textScale),
       child: Scaffold(
-        appBar: AppBar(title: const Text('Histórico')),
+        appBar: AppBar(
+          backgroundColor: const Color(0xFF03557A),
+          foregroundColor: Colors.white,
+          title: const Text('Histórico'),
+          ),
         body: ListView(
           padding: const EdgeInsets.all(14),
           children: [

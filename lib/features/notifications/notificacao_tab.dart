@@ -54,6 +54,8 @@ class _NotificacaoTabState extends State<NotificacaoTab> {
       data: MediaQuery.of(context).copyWith(textScaleFactor: textScale),
       child: Scaffold(
         appBar: AppBar(
+          backgroundColor: const Color(0xFF03557A), // muda a cor da tela superior
+          foregroundColor: Colors.white,
           title: const Text('Notificações'),
           actions: [
             IconButton(

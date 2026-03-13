@@ -90,7 +90,7 @@ class _EditProfileViewState extends State<EditProfileView> {
               const SizedBox(height: 24),
               ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 3, 85, 122),
+                  backgroundColor: const Color(0xFF03557A),
                   foregroundColor: Colors.white,
                 ),
                 onPressed: _save,
