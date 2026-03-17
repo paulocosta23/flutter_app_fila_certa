@@ -62,14 +62,26 @@ class _SenhaViewState extends State<SenhaView> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                SizedBox(
-                  height: 48,
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: enviarRecuperacao,
-                    child: const Text('Enviar'),
-                  ),
-                ),
+SizedBox(
+  height: 48,
+  width: double.infinity,
+  child: ElevatedButton(
+    onPressed: enviarRecuperacao,
+    style: ElevatedButton.styleFrom(
+      backgroundColor: const Color(0xFF03557A), // cor do botão
+      foregroundColor: Colors.white,            // cor do texto/ícones
+      elevation: 3,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+    ),
+    child: const Text(
+      'Enviar',
+      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+    ),
+  ),
+),
+
               ],
             ),
           ),

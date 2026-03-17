@@ -35,7 +35,7 @@ class _CadastroViewState extends State<CadastroView> {
   }
 
   String? _notEmpty(String? value) {
-    if ((value ?? '').trim().isEmpty) return 'Campo obrigatório';
+    if ((value ?? '').trim().isEmpty) return 'Campo obrigatório tela app';
     return null;
   }
 
@@ -91,7 +91,7 @@ class _CadastroViewState extends State<CadastroView> {
         decoration: InputDecoration(
           labelText: label,
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(11),
           ),
           suffixIcon: suffixIcon,
         ),
@@ -122,12 +122,7 @@ class _CadastroViewState extends State<CadastroView> {
                   keyboardType: TextInputType.datetime,
                   textInputAction: TextInputAction.next,
                 ),
-                buildField(
-                  'CPF',
-                  cpfController,
-                  keyboardType: TextInputType.number,
-                  textInputAction: TextInputAction.next,
-                ),
+               
                 buildField(
                   'Telefone',
                   telefoneController,
@@ -173,14 +168,28 @@ class _CadastroViewState extends State<CadastroView> {
                         : 'Ocultar senha',
                   ),
                 ),
-                const SizedBox(height: 20),
-                SizedBox(
-                  height: 48,
-                  child: ElevatedButton(
-                    onPressed: criarConta,
-                    child: const Text('Concluir'),
-                  ),
-                ),
+              const SizedBox(height: 20),
+SizedBox(
+  height: 48,
+  child: ElevatedButton(
+    onPressed: criarConta,
+    style: ElevatedButton.styleFrom(
+      backgroundColor: const Color(0xFF03557A), // 🔵 COR DO BOTÃO
+      foregroundColor: Colors.white, // 🔤 COR DO TEXTO/ÍCONES
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12), // 🔄 ARREDONDAMENTO
+      ),
+      elevation: 3, // 🌑 SOMBRA DO BOTÃO
+    ),
+    child: const Text(
+      'Concluir',
+      style: TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.bold,
+      ),
+    ),
+  ),
+),
               ],
             ),
           ),
