@@ -254,7 +254,7 @@ class _HomeViewState extends State<HomeView> {
                         child: const Text(
                           'Acessar sem cadastro',
                           style: TextStyle(
-                            fontSize: 16,
+                            fontSize: 17,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),
@@ -304,7 +304,7 @@ class _HomeViewState extends State<HomeView> {
     label: const Text(
       'Continuar com Google',
       style: TextStyle(
-        fontSize: 15,
+        fontSize: 16,
         fontWeight: FontWeight.w600,
         color: Colors.black87,
       ),
