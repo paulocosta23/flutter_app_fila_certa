@@ -52,7 +52,9 @@ class _EditProfileViewState extends State<EditProfileView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Editar perfil'),
+        title: const Text ('Editar perfil'),
+        backgroundColor: const Color(0xFF03557A),
+        foregroundColor: Colors.white,
         elevation: 1,
         actions: [
           IconButton(icon: const Icon(Icons.check), tooltip: 'Salvar', onPressed: _save),
@@ -62,7 +64,7 @@ class _EditProfileViewState extends State<EditProfileView> {
         child: Form(
           key: _formKey,
           child: ListView(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(20),
             children: [
               TextFormField(
                 controller: _nameCtrl,
