@@ -1,24 +1,58 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class HomeTab extends StatelessWidget {
+class HomeTab extends StatefulWidget {
   final VoidCallback onOpenSettings;
+
   const HomeTab({super.key, required this.onOpenSettings});
 
+  @override
+  State<HomeTab> createState() => _HomeTabState();
+}
+
+class _HomeTabState extends State<HomeTab> {
   static const _bgUrl =
       'https://admin.cnnbrasil.com.br/wp-content/uploads/sites/12/2024/02/google-maps-e1707316052388.png?w=1200&h=900&crop=0';
+
+  String? unidadeSelecionada;
+
+  final List<String> unidades = [
+    'UPA Guamá',
+    'UPA Jurunas',
+    'UPA Sacramenta',
+    'UPA Icoaraci',
+  ];
+
+  // ✅ DADOS DAS UPAS
+  final Map<String, Map<String, dynamic>> upaInfo = {
+    'UPA Guamá': {
+      'fila': 23,
+      'tempo': '35 min',
+    },
+    'UPA Jurunas': {
+      'fila': 15,
+      'tempo': '20 min',
+    },
+    'UPA Sacramenta': {
+      'fila': 30,
+      'tempo': '50 min',
+    },
+    'UPA Icoaraci': {
+      'fila': 10,
+      'tempo': '15 min',
+    },
+  };
 
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle.light, // mude para .dark se o topo estiver claro
+      value: SystemUiOverlayStyle.light,
       child: Scaffold(
         body: Stack(
           fit: StackFit.expand,
           children: [
-            // ===== Imagem de fundo =====
             Positioned.fill(
               child: Image.network(
                 _bgUrl,
@@ -47,15 +81,14 @@ class HomeTab extends StatelessWidget {
               ),
             ),
 
-            // ===== Overlay sutil =====
             Positioned.fill(
               child: Container(color: cs.surface.withOpacity(0.20)),
             ),
 
-            // ===== Barra de busca (topo, centralizada, compacta) =====
+            // ===== BARRA DE PESQUISA =====
             SafeArea(
               child: Align(
-                alignment: Alignment.topLeft, // alinhamento da aba de pesquisa .topLeft (a esqueda), .topCenter (centro), .topRigth (a direita)
+                alignment: Alignment.topLeft,
                 child: Padding(
                   padding: const EdgeInsets.only(top: 12, left: 16),
                   child: ConstrainedBox(
@@ -66,26 +99,16 @@ class HomeTab extends StatelessWidget {
                         hintText: "Pesquisar...",
                         isDense: true,
                         filled: true,
-                        fillColor: const Color.fromARGB(253, 255, 254, 254).withOpacity(0.9),
+                        fillColor: Colors.white.withOpacity(0.9),
                         contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-
                         prefixIcon: const Icon(Icons.search, size: 18),
                         prefixIconConstraints: const BoxConstraints(minWidth: 36, minHeight: 36),
 
-                        // ==== Bordas (todas dentro do InputDecoration) ====
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(
-                            color: Color.fromARGB(255, 8, 80, 139),
-                            width: 1.2,
-                          ),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(
-                            color: Color.fromARGB(255, 3, 85, 122),
-                            width: 1.2,
-                          ),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
@@ -94,34 +117,177 @@ class HomeTab extends StatelessWidget {
                             width: 1.8,
                           ),
                         ),
-                        errorBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(
-                            color: Theme.of(context).colorScheme.error,
-                            width: 1.2,
-                          ),
-                        ),
-                        focusedErrorBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(
-                            color: Theme.of(context).colorScheme.error,
-                            width: 1.8,
-                          ),
-                        ),
                       ),
-                      // Opcional: deixa o alvo de toque menor que 48px
-                      // materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),
                   ),
                 ),
               ),
             ),
 
-            // ===== Outros conteúdos abaixo da busca (exemplo) =====
-            // Você pode adicionar uma ListView aqui, com padding top alto
-            // caso deseje conteúdo rolável.
+            // ===== BOTÃO DE UNIDADES =====
+            SafeArea(
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 55, left: 14),
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 300),
+                    child: ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF03557A),
+                        foregroundColor: Colors.white,
+                        minimumSize: const Size(double.infinity, 45),
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      icon: const Icon(Icons.local_hospital),
+                      label: Text(
+                        unidadeSelecionada ?? "Unidades de Saúde",
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      onPressed: () {
+                        showModalBottomSheet(
+                          context: context,
+                          builder: (context) {
+                            return ListView(
+                              children: unidades.map((unidade) {
+                                final isSelected = unidade == unidadeSelecionada;
 
-            // ===== Botão de configurações (por último => acima de tudo) =====
+                                return ListTile(
+                                  title: Text(unidade),
+                                  trailing: isSelected
+                                      ? const Icon(Icons.check, color: Colors.green)
+                                      : null,
+                                  onTap: () {
+                                    setState(() {
+                                      unidadeSelecionada = unidade;
+                                    });
+
+                                    Navigator.pop(context);
+
+                                    final info = upaInfo[unidade]!;
+                                    final fila = info['fila'] as int;
+
+                                    Color statusColor;
+                                    String statusText;
+
+                                    if (fila <= 10) {
+                                      statusColor = Colors.green;
+                                      statusText = "Baixa";
+                                    } else if (fila <= 20) {
+                                      statusColor = Colors.orange;
+                                      statusText = "Média";
+                                    } else {
+                                      statusColor = Colors.red;
+                                      statusText = "Alta";
+                                    }
+
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return Dialog(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(16),
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(16),
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    const Icon(Icons.local_hospital, color: Color(0xFF03557A)),
+                                                    const SizedBox(width: 8),
+                                                    Expanded(
+                                                      child: Text(
+                                                        unidade,
+                                                        style: const TextStyle(
+                                                          fontSize: 18,
+                                                          fontWeight: FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+
+                                                const SizedBox(height: 16),
+
+                                                Row(
+                                                  children: [
+                                                    const Icon(Icons.people),
+                                                    const SizedBox(width: 8),
+                                                    Text("Fila: $fila pessoas"),
+                                                  ],
+                                                ),
+
+                                                const SizedBox(height: 10),
+
+                                                Row(
+                                                  children: [
+                                                    const Icon(Icons.access_time),
+                                                    const SizedBox(width: 8),
+                                                    Text("Tempo estimado: ${info['tempo']}"),
+                                                  ],
+                                                ),
+
+                                                const SizedBox(height: 16),
+
+                                                Container(
+                                                  width: double.infinity,
+                                                  padding: const EdgeInsets.symmetric(vertical: 10),
+                                                  decoration: BoxDecoration(
+                                                    color: statusColor.withOpacity(0.15),
+                                                    borderRadius: BorderRadius.circular(10),
+                                                  ),
+                                                  child: Center(
+                                                    child: Text(
+                                                      "Lotação: $statusText",
+                                                      style: TextStyle(
+                                                        color: statusColor,
+                                                        fontWeight: FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+
+                                                const SizedBox(height: 20),
+
+                                                SizedBox(
+                                                  width: double.infinity,
+                                                  child: ElevatedButton(
+                                                    style: ElevatedButton.styleFrom(
+                                                      backgroundColor: const Color(0xFF03557A),
+                                                      foregroundColor: Colors.white,
+                                                      shape: RoundedRectangleBorder(
+                                                        borderRadius: BorderRadius.circular(10),
+                                                      ),
+                                                    ),
+                                                    onPressed: () => Navigator.pop(context),
+                                                    child: const Text("Fechar"),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  },
+                                );
+                              }).toList(),
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ),
+            ),
+
+            // ===== BOTÃO DE CONFIG =====
             SafeArea(
               child: Align(
                 alignment: Alignment.topRight,
@@ -136,7 +302,7 @@ class HomeTab extends StatelessWidget {
                       tooltip: 'Configurações',
                       onPressed: () {
                         debugPrint('Abrir configurações');
-                        onOpenSettings();
+                        widget.onOpenSettings();
                       },
                       icon: const Icon(Icons.settings, color: Colors.white),
                     ),
