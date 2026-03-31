@@ -43,7 +43,8 @@ class _DashboardViewState extends State<DashboardView> {
       HomeTab(onOpenSettings: _openSettings),
       const PerfilTab(),
       const NotificacaoTab(),
-      const HistoricoTab(),
+      // const HistoricoTab(),
+      
     ];
 
     return Theme(
@@ -54,20 +55,40 @@ class _DashboardViewState extends State<DashboardView> {
           // IndexedStack mantém estado das abas
           child: IndexedStack(index: _currentIndex, children: pages),
         ),
+        // bottomNavigationBar: BottomNavigationBar(
+        //   type: BottomNavigationBarType.fixed,
+        //   iconSize: 20,
+        //   selectedFontSize: 12,
+        //   unselectedFontSize: 13,
+        //   currentIndex: _currentIndex,
+        //   onTap: (i) => setState(() => _currentIndex = i),
+        //   items: const [
+        //     BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Início'),
+        //     BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Perfil'),
+        //     BottomNavigationBarItem(icon: Icon(Icons.notifications), label: 'Notificação'),
+        //     BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'configurações')
+        //     // BottomNavigationBarItem(icon: Icon(Icons.history), label: 'Histórico'),
+        //   ],
+        // ),
         bottomNavigationBar: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          iconSize: 20,
-          selectedFontSize: 12,
-          unselectedFontSize: 13,
-          currentIndex: _currentIndex,
-          onTap: (i) => setState(() => _currentIndex = i),
-          items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Início'),
-            BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Perfil'),
-            BottomNavigationBarItem(icon: Icon(Icons.notifications), label: 'Notificação'),
-            BottomNavigationBarItem(icon: Icon(Icons.history), label: 'Histórico'),
-          ],
-        ),
+  type: BottomNavigationBarType.fixed,
+  currentIndex: _currentIndex,
+  onTap: (i) {
+    // ÍNDICE DA ABA CONFIGURAÇÕES
+    if (i == 3) {
+      _openSettings(); // 👈 ABRE A TELA
+      return;
+    }
+
+    setState(() => _currentIndex = i);
+  },
+  items: const [
+    BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Início'),
+    BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Perfil'),
+    BottomNavigationBarItem(icon: Icon(Icons.notifications), label: 'Notificação'),
+    BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Configurações'),
+  ],
+),
       ),
     );
   }
