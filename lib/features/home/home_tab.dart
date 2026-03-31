@@ -289,27 +289,27 @@ class _HomeTabState extends State<HomeTab> {
             ),
 
             // ===== BOTÃO CONFIG =====
-            SafeArea(
-              child: Align(
-                alignment: Alignment.topRight,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 8, right: 8),
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF03557A).withOpacity(0.90),
-                      shape: BoxShape.circle,
-                    ),
-                    child: IconButton(
-                      tooltip: 'Configurações',
-                      onPressed: () {
-                        widget.onOpenSettings();
-                      },
-                      icon: const Icon(Icons.settings, color: Colors.white),
-                    ),
-                  ),
-                ),
-              ),
-            ),
+            // SafeArea(
+            //   child: Align(
+            //     alignment: Alignment.topRight,
+            //     child: Padding(
+            //       padding: const EdgeInsets.only(top: 8, right: 8),
+            //       child: DecoratedBox(
+            //         decoration: BoxDecoration(
+            //           color: const Color(0xFF03557A).withOpacity(0.90),
+            //           shape: BoxShape.circle,
+            //         ),
+            //         child: IconButton(
+            //           tooltip: 'Configurações',
+            //           onPressed: () {
+            //             widget.onOpenSettings();
+            //           },
+            //           icon: const Icon(Icons.settings, color: Colors.white),
+            //         ),
+            //       ),
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       ),
