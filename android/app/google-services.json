@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "927502542651",
+    "project_id": "projectfilacerta",
+    "storage_bucket": "projectfilacerta.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:927502542651:android:7e9bb31d27e584c357791e",
+        "android_client_info": {
+          "package_name": "com.example.fila_certa"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA8q1sfJSqJNwyA58bWvlPBR_pzVOaSWFE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:927502542651:android:ad3e170dca044fc357791e",
+        "android_client_info": {
+          "package_name": "com.example.flutter_app_fila_certa"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA8q1sfJSqJNwyA58bWvlPBR_pzVOaSWFE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

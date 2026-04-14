@@ -14,9 +14,15 @@ import 'package:flutter_app_fila_certa/app/settings_scope.dart';
 
 // Splash (tela de carregamento)
 import 'package:flutter_app_fila_certa/views/splash_view.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+await Firebase.initializeApp(
+  options: DefaultFirebaseOptions.currentPlatform,
+);
+runApp(const MyApp());
 }
 
 ///
