@@ -7,17 +7,63 @@ class UnidadesTab extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final unidades = [
-      'UPA Guamá',
+      'Pronto Socorro Dr. Humberto Maradei',
       'UPA Jurunas',
       'UPA Sacramenta',
       'UPA Icoaraci',
+      'UPA Marambaia',
+      'UPA Terra Firme',
+      'UBS Portal da Amazônia',
+      'UBS Pedreira',
+      'UBS Canal do Galo 1',
     ];
 
     final Map<String, Map<String, dynamic>> upaInfo = {
-      'UPA Guamá': {'fila': 23, 'tempo': '35 min'},
-      'UPA Jurunas': {'fila': 15, 'tempo': '20 min'},
-      'UPA Sacramenta': {'fila': 30, 'tempo': '50 min'},
-      'UPA Icoaraci': {'fila': 10, 'tempo': '15 min'},
+      'Pronto Socorro Dr. Humberto Maradei': {
+        'fila': 23,
+        'tempo': '35 min',
+        'endereço': 'Passagem São Miguel, 100,  Guamá, Belém - PA',
+      },
+      'UPA Jurunas': {
+        'fila': 15,
+        'tempo': '20 min',
+        'endereço': 'Tv. Quintino Bocaiúva, Jurunas, Belém - PA',
+      },
+      'UPA Sacramenta': {
+        'fila': 30,
+        'tempo': '50 min',
+        'endereço': 'Av. Dr. Freitas, 860 , Sacramenta, Belém - PA',
+      },
+      'UPA Icoaraci': {
+        'fila': 10,
+        'tempo': '15 min',
+        'endereço': 'Rua Paraiso, Parque Guajará, Belém - PA',
+      },
+      'UPA Marambaia': {
+        'fila': 15,
+        'tempo': '19 min',
+        'endereço': 'R. Maravalho belo, sn - Marambaia, Belém - PA',
+      },
+      'UPA Terra Firme': {
+        'fila': 45,
+        'tempo': '60 min',
+        'endereço': 'Av. Perimetral, Universitário, Belém - PA',
+      },
+      'UBS Portal da Amazônia': {
+        'fila': 10,
+        'tempo': '12 min',
+        'endereço': 'R. Osvaldo de Caldas Brito, 39, Jurunas, Belém - PA',
+      },
+      'UBS Pedreira': {
+        'fila': 13,
+        'tempo': '16 min',
+        'endereço': 'Av. Pedro Miranda, 1346, Pedreira, Belém - PA',
+      },
+      'UBS Canal do Galo 1': {
+        'fila': 17,
+        'tempo': '22 min',
+        'endereço': 'Tv. Antônio Baena, s/n - Pedreira, Belém - PA',
+      },
     };
 
     return Scaffold(
@@ -37,6 +83,7 @@ class UnidadesTab extends StatelessWidget {
             onTap: () {
 
               final info = upaInfo[unidade]!;
+              final endereco = info['endereço'] as String;
               final fila = info['fila'] as int;
 
               Color statusColor;
@@ -131,13 +178,13 @@ class UnidadesTab extends StatelessWidget {
 
                             const Divider(height: 24),
 
-                            const Row(
+                            Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Icon(Icons.location_on, size: 18),
-                                SizedBox(width: 6),
+                                const Icon(Icons.location_on, size: 18),
+                                const SizedBox(width: 6),
                                 Expanded(
-                                  child: Text('Av. Dr. Freitas, 860, Belém - PA'),
+                                  child: Text(endereco),
                                 ),
                               ],
                             ),
