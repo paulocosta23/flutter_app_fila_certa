@@ -1,244 +1,332 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app_fila_certa/features/unidades/unidades_data.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class UnidadesTab extends StatelessWidget {
   const UnidadesTab({super.key});
 
+  // =========================
+  // ABRIR ROTA
+  // =========================
+  Future<void> abrirRota(double lat, double lng) async {
+
+    final url =
+        'https://www.google.com/maps/dir/?api=1&destination=$lat,$lng';
+
+    final uri = Uri.parse(url);
+
+    if (await canLaunchUrl(uri)) {
+
+      await launchUrl(
+        uri,
+        mode: LaunchMode.externalApplication,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
 
-    final unidades = [
-      'Pronto Socorro Dr. Humberto Maradei',
-      'UPA Jurunas',
-      'UPA Sacramenta',
-      'UPA Icoaraci',
-      'UPA Marambaia',
-      'UPA Terra Firme',
-      'UBS Portal da Amazônia',
-      'UBS Pedreira',
-      'UBS Canal do Galo 1',
-    ];
-
-    final Map<String, Map<String, dynamic>> upaInfo = {
-      'Pronto Socorro Dr. Humberto Maradei': {
-        'fila': 23,
-        'tempo': '35 min',
-        'endereço': 'Passagem São Miguel, 100,  Guamá, Belém - PA',
-      },
-      'UPA Jurunas': {
-        'fila': 15,
-        'tempo': '20 min',
-        'endereço': 'Tv. Quintino Bocaiúva, Jurunas, Belém - PA',
-      },
-      'UPA Sacramenta': {
-        'fila': 30,
-        'tempo': '50 min',
-        'endereço': 'Av. Dr. Freitas, 860 , Sacramenta, Belém - PA',
-      },
-      'UPA Icoaraci': {
-        'fila': 10,
-        'tempo': '15 min',
-        'endereço': 'Rua Paraiso, Parque Guajará, Belém - PA',
-      },
-      'UPA Marambaia': {
-        'fila': 15,
-        'tempo': '19 min',
-        'endereço': 'R. Maravalho belo, sn - Marambaia, Belém - PA',
-      },
-      'UPA Terra Firme': {
-        'fila': 45,
-        'tempo': '60 min',
-        'endereço': 'Av. Perimetral, Universitário, Belém - PA',
-      },
-      'UBS Portal da Amazônia': {
-        'fila': 10,
-        'tempo': '12 min',
-        'endereço': 'R. Osvaldo de Caldas Brito, 39, Jurunas, Belém - PA',
-      },
-      'UBS Pedreira': {
-        'fila': 13,
-        'tempo': '16 min',
-        'endereço': 'Av. Pedro Miranda, 1346, Pedreira, Belém - PA',
-      },
-      'UBS Canal do Galo 1': {
-        'fila': 17,
-        'tempo': '22 min',
-        'endereço': 'Tv. Antônio Baena, s/n - Pedreira, Belém - PA',
-      },
-    };
-
     return Scaffold(
+
       appBar: AppBar(
         title: const Text('Unidades de Saúde'),
       ),
 
       body: ListView.builder(
+
         itemCount: unidades.length,
+
         itemBuilder: (context, index) {
+
           final unidade = unidades[index];
 
-          return ListTile(
-            leading: const Icon(Icons.local_hospital),
-            title: Text(unidade),
+          final fila = unidade['fila'] as int;
 
-            onTap: () {
+          Color statusColor;
+          String statusTexto;
 
-              final info = upaInfo[unidade]!;
-              final endereco = info['endereço'] as String;
-              final fila = info['fila'] as int;
+          // =========================
+          // STATUS DA FILA
+          // =========================
+          if (fila <= 20) {
 
-              Color statusColor;
-              String statusText;
+            statusColor = Colors.green;
+            statusTexto = 'Baixa';
 
-              if (fila <= 10) {
-                statusColor = Colors.green;
-                statusText = "Baixa";
-              } else if (fila <= 20) {
-                statusColor = Colors.orange;
-                statusText = "Média";
-              } else {
-                statusColor = Colors.red;
-                statusText = "Alta";
-              }
+          } else if (fila <= 35) {
 
-              showDialog(
-                context: context,
-                builder: (dialogContext) {
-                  return Dialog(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
+            statusColor = Colors.orange;
+            statusTexto = 'Média';
+
+          } else {
+
+            statusColor = Colors.red;
+            statusTexto = 'Alta';
+          }
+
+          return Card(
+
+            margin: const EdgeInsets.symmetric(
+              horizontal: 12,
+              vertical: 6,
+            ),
+
+            child: ListTile(
+
+              leading: Icon(
+                Icons.local_hospital,
+                color: statusColor,
+              ),
+
+              title: Text(
+                unidade['nome'],
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+
+              subtitle: Row(
+
+                children: [
+
+                  // =========================
+                  // BOLINHA STATUS
+                  // =========================
+                  Container(
+                    width: 12,
+                    height: 12,
+
+                    decoration: BoxDecoration(
+                      color: statusColor,
+                      shape: BoxShape.circle,
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: SingleChildScrollView(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
+                  ),
 
-                            Text(
-                              '$unidade - URGÊNCIA E EMERGÊNCIA',
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
+                  const SizedBox(width: 8),
 
-                            const SizedBox(height: 4),
+                  Text(
+                    '$fila pessoas • Lotação $statusTexto',
+                  ),
+                ],
+              ),
 
-                            const Text(
-                              'Atualizado há 3 min',
-                              style: TextStyle(color: Colors.grey, fontSize: 12),
-                            ),
+              trailing: Text(unidade['tempo']),
 
-                            const SizedBox(height: 16),
+              // =========================
+              // CLIQUE NA UNIDADE
+              // =========================
+              onTap: () {
 
-                            // 🔥 BOX PRINCIPAL
-                            Container(
-                              width: double.infinity,
-                              padding: const EdgeInsets.symmetric(vertical: 12),
-                              decoration: BoxDecoration(
-                                color: const Color(0xFF03557A),
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  '👥 PESSOAS AGUARDANDO: $fila',
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
+                showDialog(
 
-                            const SizedBox(height: 16),
+                  context: context,
 
-                            Row(
-                              children: [
-                                const Icon(Icons.access_time, size: 18),
-                                const SizedBox(width: 6),
-                                Text('Tempo de espera: ${info['tempo']}'),
-                              ],
-                            ),
+                  builder: (_) {
 
-                            const SizedBox(height: 8),
+                    return AlertDialog(
 
-                            Row(
-                              children: [
-                                const Icon(Icons.bar_chart, size: 18),
-                                const SizedBox(width: 6),
-                                Text('Lotação: $statusText'),
-                                const SizedBox(width: 10),
-                                _bolinha(Colors.green, destaque: statusText == "Baixa"),
-                                _bolinha(Colors.orange, destaque: statusText == "Média"),
-                                _bolinha(Colors.red, destaque: statusText == "Alta"),
-                              ],
-                            ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
 
-                            const Divider(height: 24),
-
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Icon(Icons.location_on, size: 18),
-                                const SizedBox(width: 6),
-                                Expanded(
-                                  child: Text(endereco),
-                                ),
-                              ],
-                            ),
-
-                            const SizedBox(height: 8),
-
-                            const Row(
-                              children: [
-                                Icon(Icons.access_time_filled, size: 18),
-                                SizedBox(width: 6),
-                                Text('Funcionamento: 24h'),
-                              ],
-                            ),
-
-                            const SizedBox(height: 16),
-
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: TextButton(
-                                onPressed: () => Navigator.pop(dialogContext),
-                                child: const Text('Fechar'),
-                              ),
-                            ),
-                          ],
+                      title: Text(
+                        unidade['nome'],
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                    ),
-                  );
-                },
+
+                      content: Column(
+
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment:
+                            CrossAxisAlignment.start,
+
+                        children: [
+
+                          // =========================
+                          // FILA
+                          // =========================
+                          Row(
+                            children: [
+
+                              const Icon(
+                                Icons.people,
+                                size: 20,
+                              ),
+
+                              const SizedBox(width: 8),
+
+                              Text(
+                                'Fila: ${unidade['fila']} pessoas',
+                              ),
+                            ],
+                          ),
+
+                          const SizedBox(height: 12),
+
+                          // =========================
+                          // TEMPO
+                          // =========================
+                          Row(
+                            children: [
+
+                              const Icon(
+                                Icons.access_time,
+                                size: 20,
+                              ),
+
+                              const SizedBox(width: 8),
+
+                              Text(
+                                'Tempo: ${unidade['tempo']}',
+                              ),
+                            ],
+                          ),
+
+                          const SizedBox(height: 12),
+
+                          // =========================
+                          // LOTAÇÃO
+                          // =========================
+                          Row(
+                            children: [
+
+                              const Icon(
+                                Icons.warning,
+                                size: 20,
+                              ),
+
+                              const SizedBox(width: 8),
+
+                              Text(
+                                'Lotação: $statusTexto',
+                              ),
+
+                              const SizedBox(width: 10),
+
+                              Container(
+                                width: 14,
+                                height: 14,
+
+                                decoration: BoxDecoration(
+                                  color: statusColor,
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                            ],
+                          ),
+
+                          const SizedBox(height: 12),
+
+                          // =========================
+                          // ENDEREÇO
+                          // =========================
+                          Row(
+
+                            crossAxisAlignment:
+                                CrossAxisAlignment.start,
+
+                            children: [
+
+                              const Icon(
+                                Icons.location_on,
+                                size: 20,
+                              ),
+
+                              const SizedBox(width: 8),
+
+                              Expanded(
+                                child: Text(
+                                  unidade['endereco'],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+
+                      actions: [
+
+  Padding(
+    padding: const EdgeInsets.symmetric(
+      horizontal: 12,
+      vertical: 8,
+    ),
+
+    child: Row(
+
+      children: [
+
+        // =========================
+        // BOTÃO ROTA
+        // =========================
+        Expanded(
+          child: ElevatedButton.icon(
+
+            onPressed: () {
+
+              abrirRota(
+                unidade['lat'],
+                unidade['lng'],
               );
             },
+
+            icon: const Icon(Icons.route),
+
+            label: const Text('Ver rota'),
+
+            style: ElevatedButton.styleFrom(
+
+              padding: const EdgeInsets.symmetric(
+                vertical: 14,
+              ),
+
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          ),
+        ),
+
+        const SizedBox(width: 10),
+
+        // =========================
+        // BOTÃO FECHAR
+        // =========================
+        Expanded(
+          child: OutlinedButton(
+
+            onPressed: () {
+              Navigator.pop(context);
+            },
+
+            style: OutlinedButton.styleFrom(
+
+              padding: const EdgeInsets.symmetric(
+                vertical: 14,
+              ),
+
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+
+            child: const Text('Fechar'),
+          ),
+        ),
+      ],
+    ),
+  ),
+],
+                    );
+                  },
+                );
+              },
+            ),
           );
         },
-      ),
-    );
-  }
-
-  // 🔥 BOLINHA
-  static Widget _bolinha(Color cor, {bool destaque = false}) {
-    return Container(
-      margin: const EdgeInsets.only(right: 5),
-      width: destaque ? 18 : 10,
-      height: destaque ? 18 : 10,
-      decoration: BoxDecoration(
-        color: cor,
-        shape: BoxShape.circle,
-        boxShadow: destaque
-            ? [
-                BoxShadow(
-                  color: cor.withOpacity(0.6),
-                  blurRadius: 6,
-                ),
-              ]
-            : [],
       ),
     );
   }
