@@ -51,7 +51,7 @@ class _NotificacaoTabState extends State<NotificacaoTab> {
     final textScale = SettingsScope.of(context).textScale;
 
     return MediaQuery(
-      data: MediaQuery.of(context).copyWith(textScaleFactor: textScale),
+      data: MediaQuery.of(context).copyWith(textScaler: TextScaler.linear(textScale)),
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: const Color(0xFF03557A), // muda a cor da tela superior

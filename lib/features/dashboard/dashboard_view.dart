@@ -73,7 +73,7 @@ class _DashboardViewState extends State<DashboardView> {
       child: Scaffold(
         body: MediaQuery(
           data: MediaQuery.of(context).copyWith(
-            textScaleFactor: settings.textScale,
+            textScaler: TextScaler.linear(settings.textScale),
           ),
           child: IndexedStack(
             index: _currentIndex,

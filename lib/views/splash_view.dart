@@ -59,7 +59,7 @@ class _SplashViewState extends State<SplashView> with SingleTickerProviderStateM
                 gradient: LinearGradient(
                   colors: [
                     cs.surface,
-                    cs.surfaceVariant.withOpacity(0.25),
+                    cs.surfaceContainerHighest.withOpacity(0.25),
                   ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,

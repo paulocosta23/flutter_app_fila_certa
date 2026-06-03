@@ -52,7 +52,7 @@ class _SettingsViewState extends State<SettingsView> {
         ],
       ),
       body: MediaQuery(
-        data: MediaQuery.of(context).copyWith(textScaleFactor: _textScale),
+        data: MediaQuery.of(context).copyWith(textScaler: TextScaler.linear(_textScale)),
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [

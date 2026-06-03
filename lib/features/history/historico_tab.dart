@@ -16,7 +16,7 @@ class HistoricoTab extends StatelessWidget {
     final grouped = groupByDate<HistoryItem>(items, (h) => h.dateTime);
 
     return MediaQuery(
-      data: MediaQuery.of(context).copyWith(textScaleFactor: textScale),
+      data: MediaQuery.of(context).copyWith(textScaler: TextScaler.linear(textScale)),
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: const Color(0xFF03557A),

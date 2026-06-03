@@ -76,7 +76,7 @@ class _PerfilTabState extends State<PerfilTab> {
       ),
       body: MediaQuery(
         data: MediaQuery.of(context)
-            .copyWith(textScaleFactor: settings.textScale),
+            .copyWith(textScaler: TextScaler.linear(settings.textScale)),
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -86,7 +86,7 @@ class _PerfilTabState extends State<PerfilTab> {
                 children: [
                   CircleAvatar(
                     radius: 60,
-                    backgroundColor: cs.surfaceVariant,
+                    backgroundColor: cs.surfaceContainerHighest,
                     backgroundImage:
                         _image != null ? FileImage(_image!) : null,
                     child: _image == null

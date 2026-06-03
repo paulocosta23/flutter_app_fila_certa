@@ -48,13 +48,13 @@ class _HomeTabState extends State<HomeTab> {
                     progress == null
                         ? child
                         : Container(
-                            color: cs.surfaceVariant.withOpacity(0.4),
+                            color: cs.surfaceContainerHighest.withOpacity(0.4),
                             child: const Center(
                               child: CircularProgressIndicator(),
                             ),
                           ),
                 errorBuilder: (_, __, ___) => Container(
-                  color: cs.surfaceVariant.withOpacity(0.4),
+                  color: cs.surfaceContainerHighest.withOpacity(0.4),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
