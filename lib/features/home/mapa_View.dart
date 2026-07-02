@@ -5,7 +5,10 @@ import 'package:flutter_app_fila_certa/features/unidades/unidades_data.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MapaView extends StatefulWidget {
-  const MapaView({super.key});
+
+  final String filtro;
+
+  const MapaView({super.key, required this.filtro,});
 
   @override
   State<MapaView> createState() => _MapaViewState();
@@ -45,6 +48,37 @@ class _MapaViewState extends State<MapaView> {
   @override
   Widget build(BuildContext context) {
 
+    // =====================
+    // FILTRO DAS UNIDADES
+    // =====================
+
+    final unidadesFiltradas = unidades.where((unidade) {
+
+      final fila = unidade['fila'] as int;
+
+      String status;
+
+      if (fila <= 20) {
+        status = 'Baixa';
+      } else if (fila <= 35) {
+        status = 'Média';
+      } else {
+        status = 'Alta';
+      }
+
+      // MOSTRA TODAS
+
+      if (widget.filtro == 'Todas') {
+        return true;
+      }
+
+      // FILTRA
+
+      return status == widget.filtro;
+    }
+    
+    ).toList();
+
     return Scaffold(
 
       body: FlutterMap(
@@ -73,7 +107,7 @@ class _MapaViewState extends State<MapaView> {
           // =========================
           MarkerLayer(
 
-            markers: unidades.map((unidade) {
+            markers: unidadesFiltradas.map((unidade) {
 
               final fila = unidade['fila'] as int;
 

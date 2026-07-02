@@ -3,12 +3,26 @@ import 'package:flutter_app_fila_certa/features/unidades/unidades_data.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class UnidadesTab extends StatelessWidget {
-  const UnidadesTab({super.key});
 
   // =========================
-  // ABRIR ROTA
+  // FILTRO RECEBIDO DA DASHBOARD
   // =========================
-  Future<void> abrirRota(double lat, double lng) async {
+  final String filtro;
+  final Function(String) onFiltroChanged;
+
+  const UnidadesTab({
+    super.key,
+    required this.filtro,
+    required this.onFiltroChanged,
+  });
+
+  // =========================================================
+  // ABRIR ROTA NO GOOGLE MAPS
+  // =========================================================
+  Future<void> abrirRota(
+    double lat,
+    double lng,
+  ) async {
 
     final url =
         'https://www.google.com/maps/dir/?api=1&destination=$lat,$lng';
@@ -24,310 +38,563 @@ class UnidadesTab extends StatelessWidget {
     }
   }
 
+  // =========================================================
+  // BOTÃO DE FILTRO
+  // =========================================================
+  // =========================================================
+// BOTÃO DE FILTRO
+// =========================================================
+Widget _botaoFiltro(String texto) {
+
+  final selecionado = filtro == texto;
+
+  return GestureDetector(
+
+    onTap: () {
+
+      // ALTERA O FILTRO
+      onFiltroChanged(texto);
+    },
+
+    child: Container(
+
+      padding: const EdgeInsets.symmetric(
+        vertical: 12,
+      ),
+
+      decoration: BoxDecoration(
+
+        color:
+            selecionado
+                ? const Color(0xFF03557A)
+                : Colors.white,
+
+        borderRadius: BorderRadius.circular(30),
+
+        border: Border.all(
+          color: Colors.grey.shade300,
+        ),
+      ),
+
+      child: Text(
+
+        texto,
+
+        textAlign: TextAlign.center,
+
+        style: TextStyle(
+
+          fontWeight: FontWeight.w700,
+
+          color:
+              selecionado
+                  ? Colors.white
+                  : Colors.black87,
+        ),
+      ),
+    ),
+  );
+}
+
   @override
   Widget build(BuildContext context) {
 
-    return Scaffold(
+    // =========================================================
+    // FILTRAR UNIDADES POR LOTAÇÃO
+    // =========================================================
+    final unidadesFiltradas =
+        unidades.where((unidade) {
 
-      appBar: AppBar(
-        title: const Text('Unidades de Saúde'),
-      ),
+      final fila = unidade['fila'] as int;
 
-      body: ListView.builder(
+      String status;
 
-        itemCount: unidades.length,
+      // =========================
+      // DEFINIR STATUS
+      // =========================
+      if (fila <= 20) {
 
-        itemBuilder: (context, index) {
+        status = 'Baixa';
 
-          final unidade = unidades[index];
+      } else if (fila <= 35) {
 
-          final fila = unidade['fila'] as int;
+        status = 'Média';
 
-          Color statusColor;
-          String statusTexto;
+      } else {
 
-          // =========================
-          // STATUS DA FILA
-          // =========================
-          if (fila <= 20) {
+        status = 'Alta';
+      }
 
-            statusColor = Colors.green;
-            statusTexto = 'Baixa';
+      // =========================
+      // MOSTRAR TODAS
+      // =========================
+      if (filtro == 'Todas') {
+        return true;
+      }
 
-          } else if (fila <= 35) {
+      // =========================
+      // FILTRAR POR STATUS
+      // =========================
+      return status == filtro;
 
-            statusColor = Colors.orange;
-            statusTexto = 'Média';
+    }).toList();
 
-          } else {
+    // =========================================================
+    // TELA PRINCIPAL
+    // =========================================================
+    return Column(
 
-            statusColor = Colors.red;
-            statusTexto = 'Alta';
-          }
+      children: [
 
-          return Card(
+        // =====================================================
+        // TOPO DA TELA
+        // =====================================================
+        Container(
 
-            margin: const EdgeInsets.symmetric(
-              horizontal: 12,
-              vertical: 6,
+          padding: const EdgeInsets.fromLTRB(
+            16,
+            16,
+            16,
+            12,
+          ),
+
+          decoration: const BoxDecoration(
+
+            color: Color(0xFF03557A),
+
+            borderRadius: BorderRadius.only(
+
+              bottomLeft: Radius.circular(26),
+              bottomRight: Radius.circular(26),
+            ),
+          ),
+
+          child: SafeArea(
+
+            bottom: false,
+
+            child: Column(
+
+              children: [
+
+                // =============================================
+                // TÍTULO + NOTIFICAÇÃO
+                // =============================================
+                Row(
+
+                  mainAxisAlignment:
+                      MainAxisAlignment.spaceBetween,
+
+                  children: [
+
+                    const Text(
+
+                      'Unidades',
+
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 28,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+
+                    // =========================================
+                    // BOTÃO NOTIFICAÇÃO
+                    // =========================================
+                    Stack(
+
+                      children: [
+
+                        Container(
+
+                          width: 48,
+                          height: 48,
+
+                          decoration: BoxDecoration(
+
+                            color: Colors.white,
+
+                            borderRadius:
+                                BorderRadius.circular(16),
+                          ),
+
+                          child: IconButton(
+
+                            onPressed: () {},
+
+                            icon: const Icon(
+                              Icons.notifications_none,
+                              color: Color(0xFF03557A),
+                            ),
+                          ),
+                        ),
+
+                        // =====================================
+                        // BADGE
+                        // =====================================
+                        Positioned(
+
+                          right: 6,
+                          top: 6,
+
+                          child: Container(
+
+                            padding:
+                                const EdgeInsets.all(4),
+
+                            decoration:
+                                const BoxDecoration(
+
+                              color: Colors.red,
+                              shape: BoxShape.circle,
+                            ),
+
+                            child: const Text(
+
+                              '3',
+
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 8,
+                                fontWeight:
+                                    FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 18),
+
+                // =============================================
+                // MENU DE FILTROS
+                // =============================================
+                Container(
+
+                  padding: const EdgeInsets.all(10),
+
+                  decoration: BoxDecoration(
+
+                    color: Colors.white,
+
+                    borderRadius:
+                        BorderRadius.circular(22),
+                  ),
+
+                  child: Row(
+
+                    children: [
+
+                      Expanded(
+                        child:
+                            _botaoFiltro('Todas'),
+                      ),
+
+                      const SizedBox(width: 8),
+
+                      Expanded(
+                        child:
+                            _botaoFiltro('Baixa'),
+                      ),
+
+                      const SizedBox(width: 8),
+
+                      Expanded(
+                        child:
+                            _botaoFiltro('Média'),
+                      ),
+
+                      const SizedBox(width: 8),
+
+                      Expanded(
+                        child:
+                            _botaoFiltro('Alta'),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+
+        // =====================================================
+        // LISTA DE UNIDADES
+        // =====================================================
+        Expanded(
+
+          child: ListView.builder(
+
+            padding: const EdgeInsets.only(
+              top: 12,
+              bottom: 20,
             ),
 
-            child: ListTile(
+            itemCount: unidadesFiltradas.length,
 
-              leading: Icon(
-                Icons.local_hospital,
-                color: statusColor,
-              ),
+            itemBuilder: (context, index) {
 
-              title: Text(
-                unidade['nome'],
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
+              final unidade =
+                  unidadesFiltradas[index];
+
+              final fila =
+                  unidade['fila'] as int;
+
+              Color statusColor;
+              String statusTexto;
+
+              // =============================================
+              // DEFINIR STATUS VISUAL
+              // =============================================
+              if (fila <= 20) {
+
+                statusColor = Colors.green;
+                statusTexto = 'Baixa';
+
+              } else if (fila <= 35) {
+
+                statusColor = Colors.orange;
+                statusTexto = 'Média';
+
+              } else {
+
+                statusColor = Colors.red;
+                statusTexto = 'Alta';
+              }
+
+              // =============================================
+              // CARD DA UNIDADE
+              // =============================================
+              return Card(
+
+                elevation: 2,
+
+                margin:
+                    const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 7,
                 ),
-              ),
 
-              subtitle: Row(
+                shape: RoundedRectangleBorder(
+                  borderRadius:
+                      BorderRadius.circular(18),
+                ),
 
-                children: [
+                child: ListTile(
 
-                  // =========================
-                  // BOLINHA STATUS
-                  // =========================
-                  Container(
-                    width: 12,
-                    height: 12,
+                  contentPadding:
+                      const EdgeInsets.all(14),
+
+                  // =========================================
+                  // ÍCONE
+                  // =========================================
+                  leading: Container(
+
+                    padding: const EdgeInsets.all(10),
 
                     decoration: BoxDecoration(
+
+                      color:
+                          statusColor.withOpacity(0.12),
+
+                      borderRadius:
+                          BorderRadius.circular(14),
+                    ),
+
+                    child: Icon(
+                      Icons.local_hospital,
                       color: statusColor,
-                      shape: BoxShape.circle,
                     ),
                   ),
 
-                  const SizedBox(width: 8),
+                  // =========================================
+                  // NOME
+                  // =========================================
+                  title: Text(
 
-                  Text(
-                    '$fila pessoas • Lotação $statusTexto',
+                    unidade['nome'],
+
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 16,
+                    ),
                   ),
-                ],
-              ),
 
-              trailing: Text(unidade['tempo']),
+                  // const SizedBox(height: 6),
 
-              // =========================
-              // CLIQUE NA UNIDADE
-              // =========================
-              onTap: () {
+                  // =========================================
+                  // STATUS
+                  // =========================================
+                  subtitle: Padding(
 
-                showDialog(
+                    padding:
+                        const EdgeInsets.only(top: 8),
 
-                  context: context,
+                    child: Row(
 
-                  builder: (_) {
+                      children: [
 
-                    return AlertDialog(
+                        Container(
 
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
+                          width: 12,
+                          height: 12,
 
-                      title: Text(
-                        unidade['nome'],
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
+                          decoration: BoxDecoration(
+                            color: statusColor,
+                            shape: BoxShape.circle,
+                          ),
                         ),
+
+                        const SizedBox(width: 8),
+
+                        Text(
+
+                          '$fila pessoas • Lotação $statusTexto',
+
+                          style: TextStyle(
+                            color: Colors.grey.shade700,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // =========================================
+                  // TEMPO
+                  // =========================================
+                  trailing: Container(
+
+                    padding:
+                        const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 6,
+                    ),
+
+                    decoration: BoxDecoration(
+
+                      color:
+                          const Color(0xFF03557A)
+                              .withOpacity(0.08),
+
+                      borderRadius:
+                          BorderRadius.circular(12),
+                    ),
+
+                    child: Text(
+
+                      unidade['tempo'],
+
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF03557A),
                       ),
+                    ),
+                  ),
 
-                      content: Column(
+                  // =========================================
+                  // ABRIR DIALOG
+                  // =========================================
+                  onTap: () {
 
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment:
-                            CrossAxisAlignment.start,
+                    // onFiltroChanged(texto);
 
-                        children: [
+                    showDialog(
 
-                          // =========================
-                          // FILA
-                          // =========================
-                          Row(
-                            children: [
+                      context: context,
 
-                              const Icon(
-                                Icons.people,
-                                size: 20,
-                              ),
+                      builder: (_) {
 
-                              const SizedBox(width: 8),
+                        return AlertDialog(
 
-                              Text(
-                                'Fila: ${unidade['fila']} pessoas',
-                              ),
-                            ],
+                          shape:
+                              RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(20),
                           ),
 
-                          const SizedBox(height: 12),
-
-                          // =========================
-                          // TEMPO
-                          // =========================
-                          Row(
-                            children: [
-
-                              const Icon(
-                                Icons.access_time,
-                                size: 20,
-                              ),
-
-                              const SizedBox(width: 8),
-
-                              Text(
-                                'Tempo: ${unidade['tempo']}',
-                              ),
-                            ],
+                          title: Text(
+                            unidade['nome'],
                           ),
 
-                          const SizedBox(height: 12),
+                          content: Column(
 
-                          // =========================
-                          // LOTAÇÃO
-                          // =========================
-                          Row(
-                            children: [
-
-                              const Icon(
-                                Icons.warning,
-                                size: 20,
-                              ),
-
-                              const SizedBox(width: 8),
-
-                              Text(
-                                'Lotação: $statusTexto',
-                              ),
-
-                              const SizedBox(width: 10),
-
-                              Container(
-                                width: 14,
-                                height: 14,
-
-                                decoration: BoxDecoration(
-                                  color: statusColor,
-                                  shape: BoxShape.circle,
-                                ),
-                              ),
-                            ],
-                          ),
-
-                          const SizedBox(height: 12),
-
-                          // =========================
-                          // ENDEREÇO
-                          // =========================
-                          Row(
+                            mainAxisSize:
+                                MainAxisSize.min,
 
                             crossAxisAlignment:
                                 CrossAxisAlignment.start,
 
                             children: [
 
-                              const Icon(
-                                Icons.location_on,
-                                size: 20,
+                              Text(
+                                'Fila: ${unidade['fila']} pessoas',
                               ),
 
-                              const SizedBox(width: 8),
+                              const SizedBox(height: 12),
 
-                              Expanded(
-                                child: Text(
-                                  unidade['endereco'],
-                                ),
+                              Text(
+                                'Tempo: ${unidade['tempo']}',
+                              ),
+
+                              const SizedBox(height: 12),
+
+                              Text(
+                                'Lotação: $statusTexto',
+                              ),
+
+                              const SizedBox(height: 12),
+
+                              Text(
+                                unidade['endereco'],
                               ),
                             ],
                           ),
-                        ],
-                      ),
 
-                      actions: [
+                          actions: [
 
-  Padding(
-    padding: const EdgeInsets.symmetric(
-      horizontal: 12,
-      vertical: 8,
-    ),
+                            ElevatedButton.icon(
 
-    child: Row(
+                              onPressed: () {
 
-      children: [
+                                abrirRota(
+                                  unidade['lat'],
+                                  unidade['lng'],
+                                );
+                              },
 
-        // =========================
-        // BOTÃO ROTA
-        // =========================
-        Expanded(
-          child: ElevatedButton.icon(
+                              icon: const Icon(
+                                Icons.route,
+                              ),
 
-            onPressed: () {
+                              label:
+                                  const Text('Ver rota'),
+                            ),
 
-              abrirRota(
-                unidade['lat'],
-                unidade['lng'],
+                            TextButton(
+
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+
+                              child:
+                                  const Text('Fechar'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                ),
               );
             },
-
-            icon: const Icon(Icons.route),
-
-            label: const Text('Ver rota'),
-
-            style: ElevatedButton.styleFrom(
-
-              padding: const EdgeInsets.symmetric(
-                vertical: 14,
-              ),
-
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-          ),
-        ),
-
-        const SizedBox(width: 10),
-
-        // =========================
-        // BOTÃO FECHAR
-        // =========================
-        Expanded(
-          child: OutlinedButton(
-
-            onPressed: () {
-              Navigator.pop(context);
-            },
-
-            style: OutlinedButton.styleFrom(
-
-              padding: const EdgeInsets.symmetric(
-                vertical: 14,
-              ),
-
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-
-            child: const Text('Fechar'),
           ),
         ),
       ],
-    ),
-  ),
-],
-                    );
-                  },
-                );
-              },
-            ),
-          );
-        },
-      ),
     );
   }
 }
