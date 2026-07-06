@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app_fila_certa/views/home_view.dart';
 import 'package:flutter_app_fila_certa/views/cadastro_view.dart';
 import 'package:flutter_app_fila_certa/views/senha_view.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 // Dashboard na estrutura por features
 import 'package:flutter_app_fila_certa/features/dashboard/dashboard_view.dart';
@@ -15,7 +17,11 @@ import 'package:flutter_app_fila_certa/app/settings_scope.dart';
 // Splash (tela de carregamento)
 import 'package:flutter_app_fila_certa/views/splash_view.dart';
 
-void main() {
+void main() async {
+WidgetsFlutterBinding.ensureInitialized();
+await Firebase.initializeApp(
+  options: DefaultFirebaseOptions.currentPlatform,
+);
   runApp(const MyApp());
 }
 
